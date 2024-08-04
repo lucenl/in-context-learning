@@ -22,7 +22,6 @@ def get_enc_len_fn(lm: LLM):
     elif lm == LLM.ZEPHYR:
         from transformers import AutoTokenizer, LlamaTokenizer
         tokenizer = AutoTokenizer.from_pretrained(lm.value, use_auth_token=True)
-        # tokenizer = LlamaTokenizer.from_pretrained(llama_path('7B'))
         enc_len_fn = lambda x: len(tokenizer.encode(x))
     elif lm == LLM.DOLLY3B:
         from transformers import AutoTokenizer
@@ -34,7 +33,7 @@ def get_enc_len_fn(lm: LLM):
         enc_len_fn = lambda x: len(tokenizer.encode(x))
     elif lm == LLM.LLAMA_7B:
         from transformers import LlamaTokenizer
-        tokenizer = LlamaTokenizer.from_pretrained('/home/lucenl/llama/llama-2-7b-chat')
+        tokenizer = LlamaTokenizer.from_pretrained('/home/lucenl/llama/llama-2-13b-chat-converted')
         enc_len_fn = lambda x: len(tokenizer.encode(x))
     elif lm == LLM.LLAMA3_8B:
         from transformers import AutoTokenizer

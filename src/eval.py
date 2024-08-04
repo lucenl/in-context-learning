@@ -39,6 +39,7 @@ def complete_prompts(params, llm, examples, prompts, sep, example_template):
             llm_outputs = llm._classify_v3(prompts=prompts, choices=choices)
         else:
             try:
+                """
                 if params.lm_name == 'llama-7B':
                     
                     for dialog in prompts:
@@ -56,8 +57,10 @@ def complete_prompts(params, llm, examples, prompts, sep, example_template):
                     )
                     llm_outputs = [re['generation']['content'] for re in response]
                 else:
-                    response = llm.generate(prompts, stop=[sep])
-                    llm_outputs = [gen[0].text for gen in response.generations]
+                """
+                response = llm.generate(prompts, stop=[sep])
+                llm_outputs = [gen[0].text for gen in response.generations]
+                print(f"llm_output: {llm_outputs}")
             except Exception as e:
                     print(f"Error during model classification: {e}")
                     raise e
@@ -209,10 +212,11 @@ def eval(
             # TODO: check LLAMA output
             print(f"predictions: {batch_preds}")
             # Add other metrics
-            from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
-            precision = precision_score(batch_targets, batch_preds, average='micro', zero_division=0)
-            recall = recall_score(batch_targets, batch_preds, average='micro', zero_division=0)
-            f1 = f1_score(batch_targets, batch_preds, average='micro', zero_division=0)
+            from sklearn.metrics import precision_score, recall_score, f1_score, precision_recall_fscore_support
+            # precision = precision_score(batch_targets, batch_preds, average='micro', zero_division=0)
+            # recall = recall_score(batch_targets, batch_preds, average='micro', zero_division=0)
+            # f1 = f1_score(batch_targets, batch_preds, average='micro', zero_division=0)
+            precision, recall, f1, _ = precision_recall_fscore_support(batch_targets, batch_preds, average='macro')
             other_metrics = {
                 'precision': precision * 100,
                 'recall': recall * 100,
