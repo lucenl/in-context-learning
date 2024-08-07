@@ -55,9 +55,8 @@ def complete_prompts(params, llm, examples, prompts, sep, example_template):
                         temperature=0.6,
                         top_p=0.9,
                     )
-                    llm_outputs = [re['generation']['content'] for re in response]
-                else:
-                """
+                    llm_outputs = [re['generation']['content'] for re in response]"""
+                print(f"prompts: {prompts}")
                 response = llm.generate(prompts, stop=[sep])
                 llm_outputs = [gen[0].text for gen in response.generations]
                 print(f"llm_output: {llm_outputs}")

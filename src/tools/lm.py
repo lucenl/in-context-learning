@@ -33,7 +33,7 @@ def get_enc_len_fn(lm: LLM):
         enc_len_fn = lambda x: len(tokenizer.encode(x))
     elif lm == LLM.LLAMA_7B:
         from transformers import LlamaTokenizer
-        tokenizer = LlamaTokenizer.from_pretrained('/home/lucenl/llama/llama-2-13b-chat-converted')
+        tokenizer = LlamaTokenizer.from_pretrained('/home/lucenl/llama/llama-2-7b-chat-converted')
         enc_len_fn = lambda x: len(tokenizer.encode(x))
     elif lm == LLM.LLAMA3_8B:
         from transformers import AutoTokenizer
