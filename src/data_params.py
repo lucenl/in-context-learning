@@ -607,19 +607,19 @@ class YouTube(DataParams):
     
     def get_templates(self) -> Templates:
         T = Templates()
-        instruction = 'Your task is to classify YouTube videos as Harmful or Harmless based on their metadata.'
+        instruction = "Your task is to classify YouTube videos as Harmful or Harmless based on their metadata."
         T.prefix_template = instruction if self.prefix else ''
         
         T.example_template = ClassificationTemplate(
             choices = ["Harmful", "Harmless"],
             get_target = lambda _choices, **kwargs: kwargs['label'],
             # templates = 'Title: {Title}\nDescription: {Description}\nTranscript: {Transcript}\nClassification: {_target}')
-            templates = 'Title: {Title}\nClassification: {_target}')
+            templates = 'Title: {Title}\nCaption: {caption}\nClassification: {_target}')
         
         T.instructed_example_template = ClassificationTemplate(
             choices = ["Harmful", "Harmless"],
             get_target = lambda _choices, **kwargs: kwargs['label'],
-            templates='Review the following video metadata:\nTitle: {Title}\nIs the video above Harmful or Harmless?\nAnswer: {_target}')
+            templates='Review the following video metadata:\nTitle: {Title}\nCaption: {caption}\nIs the video above Harmful or Harmless?\nAnswer: {_target}')
         T.selection_example_template = T.instructed_example_template
         return T
 

@@ -93,7 +93,7 @@ def calculate_manual_metrics(tn, fp, fn, tp):
     
 def process_directory(root_dir):
     results = []
-    
+    nonbi = set()
     for n_shots_dir in os.listdir(root_dir):
         if not n_shots_dir.endswith('_shots'):
             continue
@@ -123,6 +123,15 @@ def process_directory(root_dir):
                             if os.path.exists(json_file):
                                 
                                 data = extract_metrics(json_file)
+                                print("number of nonbinary:")
+                                count = 0
+                                for i, pre in enumerate(data['predictions']):
+                                    if pre != 'Harmless' and pre != 'Harmful':
+                                        print(f"non-binary prediction: {pre}")
+                                        nonbi.add(json_file)
+                                        # data['predictions'][i] = 'Harmful'  # Modify the list element directly
+                                        count += 1
+                                print(count)
                                 micro_metrics = cal_micro_metrics(data['targets'], data['predictions'])
                                 macro_metrics = cal_macro_metrics(data['targets'], data['predictions'])
                                 manual_metrics = calculate_manual_metrics(micro_metrics['tn'], micro_metrics['fp'], micro_metrics['fn'], micro_metrics['tp'])
@@ -137,14 +146,14 @@ def process_directory(root_dir):
                                     **manual_metrics
                                 })
 
-    
+    print(nonbi)
     return pd.DataFrame(results)
 
 # Specify the root directory
-root_dir = '../results/nonbalance/YOUTUBE/test'  # Current directory
+root_dir = '../results/caption_mistral_zero/YOUTUBE/test'  # Current directory
 
 # Process the directory and get the DataFrame
 df = process_directory(root_dir)
 
 # Save to Excel
-df.to_excel('results.xlsx', index=False)
+df.to_excel('caption_mistral_zeroresults.xlsx', index=False)

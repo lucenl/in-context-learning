@@ -122,11 +122,10 @@ class LMType(str, Enum):
 
 class LLM(str, Enum):
     NEO = 'EleutherAI/gpt-neo-2.7B'
-    LLAMA13B = 'llama-13B'
+    
     LLAMA30B = 'llama-30B'
     STARCODER = 'bigcode/starcoder'
     ZEPHYR = 'HuggingFaceH4/zephyr-7b-alpha'
-
     BABBAGE_002 = 'babbage-002'
     DAVINCI_002 = 'davinci-002'
     CODE_CUSHMAN_001 = 'code-cushman-001'
@@ -138,6 +137,7 @@ class LLM(str, Enum):
     MAJORITY = 'majority'
     DOLLY3B = 'databricks/dolly-v2-3b'
     
+    LLAMA13B = 'llama-13B'
     LLAMA_7B = 'llama-7B'
     LLAMA3_8B = 'meta-llama/Meta-Llama-3-8B'
     MISTRAL = 'mistralai/Mistral-7B-v0.1'
@@ -146,7 +146,7 @@ class LLM(str, Enum):
     GPT4o_mini = 'gpt-4o-mini'
 
 openai_lms = [LLM.BABBAGE_002, LLM.DAVINCI_002, LLM.CODE_CUSHMAN_001, LLM.CODE_DAVINCI_002, LLM.TEXT_DAVINCI_002, LLM.TEXT_DAVINCI_003, LLM.TURBO, LLM.TURBO_JUNE, LLM.GPT4, LLM.GPT4o_mini]
-chat_lms = [LLM.TURBO, LLM.TURBO_JUNE, LLM.GPT4o_mini, LLM.LLAMA_7B]
+chat_lms = [LLM.TURBO, LLM.TURBO_JUNE, LLM.GPT4o_mini, LLM.LLAMA13B]
 
 context_length_limit = {
     LLM.CODE_CUSHMAN_001: 2048,
