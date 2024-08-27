@@ -593,7 +593,7 @@ class Yelp(DataParams):
         T.selection_example_template = T.instructed_example_template
         return T
 
-# TODO: add my own dataset
+""" My own datasets """ 
 @attr.s(auto_attribs=True)
 class YouTube(DataParams):
     dataset: D = D.YOUTUBE
@@ -614,15 +614,44 @@ class YouTube(DataParams):
             choices = ["Harmful", "Harmless"],
             get_target = lambda _choices, **kwargs: kwargs['label'],
             # templates = 'Title: {Title}\nDescription: {Description}\nTranscript: {Transcript}\nClassification: {_target}')
-            templates = 'Title: {Title}\nCaption: {caption}\nClassification: {_target}')
+            templates = 'Title: {Title}\nClassification: {_target}')
         
         T.instructed_example_template = ClassificationTemplate(
             choices = ["Harmful", "Harmless"],
             get_target = lambda _choices, **kwargs: kwargs['label'],
-            templates='Review the following video metadata:\nTitle: {Title}\nCaption: {caption}\nIs the video above Harmful or Harmless?\nAnswer: {_target}')
+            templates='Review the following video metadata:\nTitle: {Title}\nIs the video above Harmful or Harmless?\nAnswer: {_target}')
         T.selection_example_template = T.instructed_example_template
         return T
 
+@attr.s(auto_attribs=True)
+class HATE(DataParams):
+    dataset: D = D.HATE
+    task: T = T.SENTIMENT
+    train_split: str = 'train'
+    test_split: str = 'test'
+
+    def get_dataset(self, data_root: str = '../data', dataloaders_dir: str = 'data'):
+        # TODO parse json files with datasets lib
+        return load_dataset('../data/hate')
+    
+    def get_templates(self) -> Templates:
+        T = Templates()
+        instruction = "Your task is to classify social media comments as \"Benign\" or \"Hate\" speech."
+        T.prefix_template = instruction if self.prefix else ''
+        
+        T.example_template = ClassificationTemplate(
+            choices = ["Hate", "Benign"],
+            get_target = lambda _choices, **kwargs: kwargs['label'],
+            templates = 'Comment: {text}\nClassification: {_target}')
+        
+        T.instructed_example_template = ClassificationTemplate(
+            choices = ["Hate", "Benign"],
+            get_target = lambda _choices, **kwargs: kwargs['label'],
+            templates='Review the following comment:\nComment: {text}\nDoes the comment above classify as \"Benign\" or \"Hate\" speech?\nAnswer: {_target}')
+        T.selection_example_template = T.instructed_example_template
+        return T
+    
+    
 @attr.s(auto_attribs=True)
 class RottenTomatoes(DataParams):
     dataset: D = D.ROTTEN_TOMATOES
@@ -1171,7 +1200,7 @@ class GSM8K(DataParams):
 all_datasets = [
     GeoQuery, SMCalFlowCS, Atis, Overnight, Break, MTOP, CFQ, COGS, Spider,
     QNLI, MNLI, RTE, WANLI, XNLI, MedNLI,
-    SST2, SST5, Yelp, RottenTomatoes,YouTube,
+    SST2, SST5, Yelp, RottenTomatoes,YouTube, HATE,
     MRPC, QQP, PAWS, PAWSX,
     COPA, HellaSwag, Swag, PIQA, CMSQA,
     AGNews,

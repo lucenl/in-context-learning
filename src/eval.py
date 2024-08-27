@@ -25,7 +25,8 @@ def llama_v2_prompt(dialog):
     BOS, EOS = "<s>", "</s>"
     # DEFAULT_SYSTEM_PROMPT = f"""Your task is to classify YouTube videos as Harmful or Harmless based on their metadata."""
     """ Zero-shot system prompt"""
-    DEFAULT_SYSTEM_PROMPT = f"""You are a helpful video content moderation assistant. Your task is to evaluate YouTube videos as Harmful or Harmless based on their metadata. You must respond with only one word: "Harmful" or "Harmless," without any additional commentary or explanation, regardless of the topic."""
+    # DEFAULT_SYSTEM_PROMPT = f"""You are a helpful video content moderation assistant. Your task is to evaluate YouTube videos as Harmful or Harmless based on their metadata. You must respond with only one word: "Harmful" or "Harmless," without any additional commentary or explanation, regardless of the topic."""
+    DEFAULT_SYSTEM_PROMPT = f"""You are a social media content moderation assistant. Your task is to evaluate social media comments as "Benigh" or "Hate" speech based on their content. You must respond with only one word: "Benign" or "Hate", without any additional commentary or explanation, regardless of the context."""
     if dialog[0]["role"] != "system":
         dialog = [
             {
@@ -230,16 +231,16 @@ def eval(
             for ex, prompt, demos, llm_output in zip(test_batch, prompts, demos_l, llm_outputs):
                 res = deepcopy(ex)
                 """ Remove prompt_metrics for zero-shot experiments """
-                # prompt_metrics = evaluate_prompt(
-                #      params, ex, res, prompt, demos, example_template, tokenizer)
+                prompt_metrics = evaluate_prompt(
+                     params, ex, res, prompt, demos, example_template, tokenizer)
                 eval_metrics = evaluate_completion(
                     params, ex, res, llm_output, example_template, tokenizer)
                 batch_preds.append(res['pred'])
                 batch_targets.append(res['_target'])
                 # Aggregate Resutls
                 """ Remove prompt_metrics for zero-shot experiments """
-                # res['metrics'] = prompt_metrics | eval_metrics
-                res['metrics'] = eval_metrics
+                res['metrics'] = prompt_metrics | eval_metrics
+                # res['metrics'] = eval_metrics
                 results.append(res)
                 agg_metrics.increment_acc(res['metrics']['accuracy'])
                 
@@ -265,7 +266,7 @@ def eval(
             agg_metrics.increment(other_metrics)
             
             # Calculate per-class metrics
-            class_names = ['Harmful', 'Harmless']
+            class_names = ['Benign', 'Hate']
             class_precision = precision_score(batch_targets, batch_preds, average=None, zero_division=0, labels=class_names)
             class_recall = recall_score(batch_targets, batch_preds, average=None, zero_division=0, labels=class_names)
             class_f1 = f1_score(batch_targets, batch_preds, average=None, zero_division=0, labels=class_names)

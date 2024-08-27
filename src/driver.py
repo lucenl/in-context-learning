@@ -184,7 +184,6 @@ def get_prompt_template(
     else:
         ex_len_fn = lambda ex, **kwargs: enc_len_fn(templates.example_template.format(**ex, **kwargs))
         ex_template = templates.selection_example_template
-        
         if P.exp.balance:
             P_half = deepcopy(P)
             P_half.selector.n_shots = half_shots

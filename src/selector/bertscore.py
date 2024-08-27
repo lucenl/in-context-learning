@@ -258,6 +258,7 @@ class BertScoreSelector(BaseExampleSelector, SelectorUtilsMixin, BaseModel):
 
     def select_examples(self, input_variables: dict[str, str], return_scores=False) -> list[dict]:
         query = self.example_template.format(**input_variables, test=True)
+        # print(f"query: {query}")
         if query not in self.query2idx:
             if self.args.coverage:
                 shot_idxs = self.get_covering_shot_idxs(
@@ -273,7 +274,6 @@ class BertScoreSelector(BaseExampleSelector, SelectorUtilsMixin, BaseModel):
         else:
             shot_idxs = self.shot_idxs_l[self.query2idx[query]]
             shot_scores = self.shot_scores_l[self.query2idx[query]]
-
         if return_scores:
             return self.demo_candidates.select(shot_idxs), shot_scores
         else:
